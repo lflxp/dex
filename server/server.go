@@ -43,6 +43,7 @@ import (
 	"github.com/dexidp/dex/connector/mock"
 	"github.com/dexidp/dex/connector/oauth"
 	"github.com/dexidp/dex/connector/oidc"
+	"github.com/dexidp/dex/connector/ginapi"
 	"github.com/dexidp/dex/connector/openshift"
 	"github.com/dexidp/dex/connector/saml"
 	"github.com/dexidp/dex/storage"
@@ -679,7 +680,7 @@ var ConnectorsConfig = map[string]func() ConnectorConfig{
 	"atlassian-crowd": func() ConnectorConfig { return new(atlassiancrowd.Config) },
 	// Keep around for backwards compatibility.
 	"samlExperimental": func() ConnectorConfig { return new(saml.Config) },
-	"pocketbase": func() ConnectorConfig { return new(pocketbase.Config) },
+	"ginapi": func() ConnectorConfig { return new(ginapi.Connector) },
 }
 
 // openConnector will parse the connector config and open the connector.

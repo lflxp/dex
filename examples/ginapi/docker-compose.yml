@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # 后端测试应用（Nginx）
+  backend:
+    image: nginx:latest
+    ports:
+      - "8081:80"
+    networks:
+      - auth-network
+    container_name: backend
+
+  # Dex 身份认证服务
+  dex:
+    image: demodex:v1
+    volumes:
+      - ./config.ginapi.yaml:/etc/dex/config.yaml
+    ports:
+      - "5556:5556"
+    networks:
+      - auth-network
+    container_name: dex
+    command: ["/config","serve", "/etc/dex/config.yaml"]
+
+  ginapi:
+    image: ginapi:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - auth-network
+    container_name: ginapi
+    command: ["sh", "-c", "/demo"]
+
+  # oauth2-proxy 反向代理+认证中间件
+  oauth2-proxy:
+    image: oauth2-proxy:feature-j302
+    volumes:
+      - ./oauth2-proxy-config.cfg:/etc/oauth2-proxy/config.cfg
+    ports:
+      - "4180:4180"
+    networks:
+      - auth-network
+    container_name: oauth2-proxy
+    depends_on:
+      - dex
+    environment:
+      - OAUTH2_PROXY_COOKIE_SECRET=ZmFrZXVzZXJjbG91ZGZha2U=  # 测试用密钥，生产需替换为随机值
+    command: ["--config=/etc/oauth2-proxy/config.cfg"]
+
+networks:
+  auth-network:
+    driver: bridge

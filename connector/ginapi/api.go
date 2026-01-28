@@ -1,4 +1,4 @@
-package pocketbase
+package ginapi 
 
 import (
 	"context"
