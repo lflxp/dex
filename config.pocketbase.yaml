@@ -1,0 +1,46 @@
+issuer: http://127.0.0.1:5556/dex
+
+storage:
+  type: memory
+
+web:
+  http: 0.0.0.0:5556
+  pathPrefix: "/dex"
+
+logger:
+  level: debug
+  format: text
+
+telemetry:
+  http: 0.0.0.0:5558
+
+grpc:
+  addr: 0.0.0.0:5557
+
+staticClients:
+  - id: my-app
+    redirectURIs:
+    - "http://backend:80" # 业务系统的回调地址
+    - "http://ginapi:8080/callback"
+    - "http://127.0.0.1:8080/callback"
+    - "http://127.0.0.1:8081"
+    - "http://127.0.0.1:4180/oauth2/callback"
+    name: "My Application"
+    secret: my-app-secret-123
+
+oauth2:
+  skipApprovalScreen: true
+  alwaysShowLoginScreen: false
+
+connectors:
+  - type: pocketbase
+    id: pocketbase
+    name: 轻量化鉴权
+    config:
+      apiURL: "http://127.0.0.1:8080"          # Gin API的地址
+      clientID: "dex-client-123"               # 对接Gin API的客户端ID
+      clientSecret: "dex-secret-456"           # 对接Gin API的客户端秘钥
+      loginPath: "/auth/login"                 # Gin API的登录路径
+      callbackPath: "/auth/callback"           # Gin API的回调路径
+
+enablePasswordDB: false

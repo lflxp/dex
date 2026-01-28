@@ -679,6 +679,7 @@ var ConnectorsConfig = map[string]func() ConnectorConfig{
 	"atlassian-crowd": func() ConnectorConfig { return new(atlassiancrowd.Config) },
 	// Keep around for backwards compatibility.
 	"samlExperimental": func() ConnectorConfig { return new(saml.Config) },
+	"pocketbase": func() ConnectorConfig { return new(pocketbase.Config) },
 }
 
 // openConnector will parse the connector config and open the connector.
