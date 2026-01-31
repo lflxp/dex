@@ -25,6 +25,7 @@ staticClients:
     - "http://127.0.0.1:8080/callback"
     - "http://127.0.0.1:8081"
     - "http://127.0.0.1:8089/callback"
+    - "http://127.0.0.1:8088/callback"
     - "http://127.0.0.1:4180/oauth2/callback"
     name: "My Application"
     secret: my-app-secret-123
@@ -38,7 +39,7 @@ connectors:
     id: ginapi
     name: 轻量化鉴权
     config:
-      apiURL: "http://127.0.0.1:8089"          # Gin API的地址
+      apiURL: "http://127.0.0.1:8088"          # Gin API的地址
       clientID: "dex-client-123"               # 对接Gin API的客户端ID
       clientSecret: "dex-secret-456"           # 对接Gin API的客户端秘钥
       loginPath: "/auth/login"                 # Gin API的登录路径
