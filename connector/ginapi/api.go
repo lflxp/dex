@@ -1,7 +1,8 @@
-package ginapi 
+package ginapi
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -31,13 +32,14 @@ func NewConnector(ctx context.Context, logger *slog.Logger, config Config) (conn
 	}
 
 	return &Connector{
-		config:       config,
-		logger:       logger,
-		APIURL:       strings.TrimSuffix(config.APIURL, "/"),
-		ClientID:     config.ClientID,
-		ClientSecret: config.ClientSecret,
-		LoginPath:    config.LoginPath,
-		CallbackPath: config.CallbackPath,
+		config:             config,
+		logger:             logger,
+		APIURL:             strings.TrimSuffix(config.APIURL, "/"),
+		ClientID:           config.ClientID,
+		ClientSecret:       config.ClientSecret,
+		LoginPath:          config.LoginPath,
+		CallbackPath:       config.CallbackPath,
+		InsecureSkipVerify: config.InsecureSkipVerify,
 	}, nil
 }
 
@@ -100,7 +102,14 @@ func (c *Connector) HandleCallback(s connector.Scopes, r *http.Request) (connect
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	client := &http.Client{Timeout: 10 * time.Second}
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return connector.Identity{}, fmt.Errorf("call verify API failed: %v", err)
@@ -178,7 +187,14 @@ func (c *Connector) Refresh(ctx context.Context, s connector.Scopes, identity co
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	client := &http.Client{Timeout: 10 * time.Second}
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return connector.Identity{}, fmt.Errorf("call refresh API failed: %v", err)

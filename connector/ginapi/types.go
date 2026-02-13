@@ -1,4 +1,4 @@
-package ginapi 
+package ginapi
 
 import (
 	"log/slog"
@@ -16,7 +16,8 @@ type Config struct {
 	// 登录页面的路径（Gin API提供的登录页）
 	LoginPath string `json:"loginPath"`
 	// 回调路径（Gin API处理完登录后跳转回Dex的路径）
-	CallbackPath string `json:"callbackPath"`
+	CallbackPath       string `json:"callbackPath"`
+	InsecureSkipVerify bool   `json:"insecureSkipVerify"`
 }
 
 // Connector 实现Dex的Connector接口
@@ -32,7 +33,8 @@ type Connector struct {
 	// 登录页面的路径（Gin API提供的登录页）
 	LoginPath string `json:"loginPath"`
 	// 回调路径（Gin API处理完登录后跳转回Dex的路径）
-	CallbackPath string `json:"callbackPath"`
+	CallbackPath       string `json:"callbackPath"`
+	InsecureSkipVerify bool   `json:"insecureSkipVerify"`
 }
 
 // IdentityResponse Gin API返回的用户身份信息结构
