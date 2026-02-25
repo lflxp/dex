@@ -1,5 +1,6 @@
 # docker build -t dex:v0.0.3 -f ./Dockerfile_local . 
-FROM harbor.ks.x/eclipse-che/golang:1.26-alpine  as builder
+# FROM harbor.ks.x/eclipse-che/golang:1.26-alpine  as builder
+FROM golang:1.26-alpine  as builder
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 # ENV CGO_ENABLED=0
 ENV GOPROXY="https://goproxy.cn"
@@ -8,7 +9,8 @@ WORKDIR /go/src/
 RUN unset GOPATH && pwd && ls -l && \
     cd /go/src/cmd/dex && go build -o dex *.go
 
-FROM harbor.ks.x/eclipse-che/alpine:3.20
+# FROM harbor.ks.x/eclipse-che/alpine:3.20
+FROM alpine:3.20
 COPY --from=builder /go/src/cmd/dex/dex /dex
 # COPY apiserver /apiserver
 # COPY ./asset /asset
